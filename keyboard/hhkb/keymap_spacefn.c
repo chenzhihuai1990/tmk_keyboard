@@ -2,9 +2,10 @@
  * HHKB SapceFn Layout
  */
 #include "keymap_common.h"
-
+#define SPACEFN_LAYER 3
 enum function_id {
-    SPACEFN_ENABLE,
+    DUAL_ALT,
+    ALT_LAYER_KEY,
 };
 //define SCTL FN6
 /*define SCTL LCTL*/
@@ -32,7 +33,7 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
            TAB, Q,   W,   E,   R,   T,   Y,   U,   I,   O,   P,   LBRC,RBRC,BSPC,       \
            LCTL,A,   S,   D,   F,   G,   H,   J,   K,   L,   SCLN,QUOT,ENT,             \
            LSFT,Z,   X,   C,   V,   B,   N,   M,   COMM,DOT, SLSH,RSFT,FN4,             \
-                LGUI,LALT,          SPC,                FN2,RGUI),
+                LGUI, FN0,          SPC,                FN2,RGUI),
 
     /* Layer 1: SpaceFn Layer
      * ,-----------------------------------------------------------.
@@ -109,6 +110,25 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
            TRNS,MPRV,MPLY,MNXT,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,           \
            TRNS,VOLD,VOLU,MUTE,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,APP ,TRNS,TRNS,           \
                 TRNS,TRNS,          FN1,               TRNS,TRNS),
+
+    /* Layer 5: LAlt Fn Mode 
+     * ,-----------------------------------------------------------.
+     * |   | F1| F2| F3| F4| F5| F6| F7| F8| F9|F10|F11|F12|Ins|Del|
+     * |-----------------------------------------------------------|
+     * |     |   |   |   |   |   |   |Hom|Up |End|   |   |   |     |
+     * |-----------------------------------------------------------|
+     * |      |   |   |   |   |   |PgU|Lef|Dow|Rig|   |   |        |
+     * |-----------------------------------------------------------|
+     * |        |   |   |   |   |Spc|PgD|   |   |   |   |      |   |
+     * `-----------------------------------------------------------'
+     *       |   |     |                       |     |   |
+     *       `-------------------------------------------'
+     */
+    KEYMAP(TRNS,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,   \
+           TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,FN20,FN20, FN20, TRNS,TRNS,TRNS,TRNS,     \
+           TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,FN20,FN20,FN20,FN20,TRNS,TRNS,TRNS,           \
+           TRNS,TRNS,TRNS,TRNS,TRNS,SPC, FN20,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,           \
+                TRNS,TRNS,          TRNS,               TRNS,TRNS),
 };
 
 
@@ -125,6 +145,10 @@ const action_t fn_actions[] PROGMEM = {
     [2]  = ACTION_LAYER_TAP_TOGGLE(2),//AltFn
     [3]  = ACTION_LAYER_TAP_KEY(3, KC_SPC),//SpaceFn
     [4]  = ACTION_LAYER_MOMENTARY(4),//SapceFn
+
+    [0]  = ACTION_FUNCTION(DUAL_ALT),
+
+    [20] = ACTION_FUNCTION(ALT_LAYER_KEY),
 };
 
 /*
@@ -136,24 +160,35 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
     dprintf("%d", record->tap.count);
     if (record->tap.interrupted) dprint("i");
     dprint("\n");
+    dprintf("real: %u\n", get_mods());
+    dprintf("weak: %u\n", get_weak_mods());
 
     switch (id) {
-        case SPACEFN_ENABLE:
+        case DUAL_ALT:
             if (record->event.pressed) {
-                if (record->tap.count > 0 && !record->tap.interrupted) {
-                    if (record->tap.interrupted) {
-                        register_mods(MOD_BIT(KC_LCTL));
-                    }
-                } else {
-                    register_mods(MOD_BIT(KC_LCTL));
-                }
+                add_weak_mods(MOD_BIT(KC_LALT));
+                layer_invert(5);
+            }else
+            {
+                send_keyboard_report();
+                layer_invert(5);
+                del_weak_mods(MOD_BIT(KC_LALT));
+                send_keyboard_report();
+            }
+            break;
+
+        case ALT_LAYER_KEY:
+            if (record->event.pressed) {
+                dprintf("key at position %" PRIu16 " is pressed\n", record->event.key);
+                del_weak_mods(MOD_BIT(KC_LALT));
+                uint8_t keycode = keymap_key_to_keycode(SPACEFN_LAYER, record->event.key);
+                add_key(keycode);
+                send_keyboard_report();
             } else {
-                if (record->tap.count > 1 && !(record->tap.interrupted)) {
-                    default_layer_xor(1UL<<1);
-                    record->tap.count = 0;   //ad hoc: cancel tap
-                } else {
-                    unregister_mods(MOD_BIT(KC_LCTL));
-                }
+                //todo switch
+                uint8_t keycode = keymap_key_to_keycode(SPACEFN_LAYER, record->event.key);
+                del_key(keycode);
+                send_keyboard_report();
             }
             break;
     }
