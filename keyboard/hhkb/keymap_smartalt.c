@@ -7,6 +7,7 @@
 enum function_id {
     SMARTALT_ACTIVATION,
     SMARTALT_NAGVIATIONS_FUNCTIONS,
+    SMARTALT_SPACE,
 };
 
 #ifdef KEYMAP_SECTION_ENABLE
@@ -147,7 +148,7 @@ const action_t fn_actions[] PROGMEM = {
 
     [0]  = ACTION_FUNCTION(SMARTALT_ACTIVATION),
     [10]  = ACTION_FUNCTION_TAP(SMARTALT_SPACE),
-    [20] = ACTION_FUNCTION(SMARTALT_NAGVIATION),
+    [20] = ACTION_FUNCTION(SMARTALT_NAGVIATIONS_FUNCTIONS),
 };
 
 /*
@@ -175,7 +176,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
             }
             break;
 
-        case SMARTALT_NAGVIATION_FUNCTIONS:
+        case SMARTALT_NAGVIATIONS_FUNCTIONS:
             if (record->event.pressed) {
                 del_weak_mods(MOD_BIT(KC_LALT));
                 uint8_t keycode = keymap_key_to_keycode(SPACEFN_LAYER, record->event.key);
