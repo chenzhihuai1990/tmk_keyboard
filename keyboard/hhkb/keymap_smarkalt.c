@@ -152,8 +152,6 @@ const action_t fn_actions[] PROGMEM = {
 
 /*
  * user defined action function
- * TO-TEST: Alt + Shift will switch input method, thus we can't use alt + shift + arrow to select chars ?
- * (TODO)SOLUTION: when press shift will just add_mods(LSHIFT) but not send it until other key is press.
  */
 
 void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
