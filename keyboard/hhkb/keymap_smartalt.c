@@ -7,6 +7,7 @@
 enum function_id {
     SMARTALT_ACTIVATION,
     SMARTALT_NAGVIATIONS_FUNCTIONS,
+    SMARTALT_MODS_LALT,
     SMARTALT_SPACE,
 };
 
@@ -124,11 +125,11 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
      *       |   |     |                       |     |   |
      *       `-------------------------------------------'
      */
-    KEYMAP(TRNS,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,   \
-           TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,FN20,FN20, FN20, TRNS,TRNS,TRNS,TRNS,     \
-           TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,FN20,FN20,FN20,FN20,TRNS,TRNS,TRNS,           \
-           TRNS,TRNS,TRNS,TRNS,TRNS,TRNS, FN20,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,           \
-                TRNS,TRNS,          FN10,               RALT,TRNS),
+    KEYMAP(FN21,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,   \
+           FN21,FN21,FN21,FN21,FN21,FN21,FN21,FN20,FN20, FN20, FN21,FN21,FN21,FN21,     \
+           FN21,FN21,FN21,FN21,FN21,FN21,FN20,FN20,FN20,FN20,FN21,FN21,FN21,           \
+           FN21,FN21,FN21,FN21,FN21,FN21, FN20,FN21,FN21,FN21,FN21,FN21,FN21,           \
+                FN21,FN21,          FN10,               RALT,FN21),
 };
 
 
@@ -149,6 +150,7 @@ const action_t fn_actions[] PROGMEM = {
     [0]  = ACTION_FUNCTION(SMARTALT_ACTIVATION),
     [10]  = ACTION_FUNCTION_TAP(SMARTALT_SPACE),
     [20] = ACTION_FUNCTION(SMARTALT_NAGVIATIONS_FUNCTIONS),
+    [21] = ACTION_FUNCTION(SMARTALT_MODS_LALT),
 };
 
 /*
@@ -204,6 +206,18 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
                 } else {
                     layer_on(SMARTALT_LAYER);
                 }
+            }
+            break;
+        case SMARTALT_MODS_LALT:
+            if (record->event.pressed) {
+                add_weak_mods(MOD_BIT(KC_LALT));
+                uint8_t keycode = keymap_key_to_keycode(0, record->event.key);
+                add_key(keycode);
+                send_keyboard_report();
+            } else {
+                uint8_t keycode = keymap_key_to_keycode(0, record->event.key);
+                del_key(keycode);
+                send_keyboard_report();
             }
             break;
     }
