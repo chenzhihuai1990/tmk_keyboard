@@ -7,8 +7,9 @@
 enum function_id {
     SMARTALT_ACTIVATION,
     SMARTALT_NAGVIATIONS_FUNCTIONS,
-    SMARTALT_MODS_LALT,
+    SMARTALT_WITH_ALT,
     SMARTALT_SPACE,
+    SMARTALT_MODS_PENDING,
 };
 
 #ifdef KEYMAP_SECTION_ENABLE
@@ -128,7 +129,7 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
     KEYMAP(FN21,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,   \
            FN21,FN21,FN21,FN21,FN21,FN21,FN21,FN20,FN20, FN20, FN21,FN21,FN21,FN21,     \
            FN21,FN21,FN21,FN21,FN21,FN21,FN20,FN20,FN20,FN20,FN21,FN21,FN21,           \
-           FN21,FN21,FN21,FN21,FN21,FN21, FN20,FN21,FN21,FN21,FN21,FN21,FN21,           \
+           FN22,FN21,FN21,FN21,FN21,FN21, FN20,FN21,FN21,FN21,FN21,FN21,FN21,           \
                 FN21,FN21,          FN10,               RALT,FN21),
 };
 
@@ -144,13 +145,15 @@ const action_t fn_actions[] PROGMEM = {
 #endif
     [1]  = ACTION_DEFAULT_LAYER_TOGGLE(1),
     [2]  = ACTION_LAYER_TAP_TOGGLE(2),//AltFn
-    [3]  = ACTION_LAYER_TAP_KEY(3, KC_SPC),//SpaceFn
+    [3]  = ACTION_LAYER_TAP_KEY(SPACEFN_LAYER, KC_SPC),//SpaceFn
     [4]  = ACTION_LAYER_MOMENTARY(4),//SpaceFn
 
     [0]  = ACTION_FUNCTION(SMARTALT_ACTIVATION),
-    [10]  = ACTION_FUNCTION_TAP(SMARTALT_SPACE),
-    [20] = ACTION_FUNCTION(SMARTALT_NAGVIATIONS_FUNCTIONS),
-    [21] = ACTION_FUNCTION(SMARTALT_MODS_LALT),
+    //following keys is available only if SMARTALT layer was activated
+    [10]  = ACTION_FUNCTION_TAP(SMARTALT_SPACE),//when tap send space, when holding, cancel SMARTALT_LAYER
+    [20] = ACTION_FUNCTION(SMARTALT_NAGVIATIONS_FUNCTIONS),//arrow keys and home/end/pgup/pgdown and F1-F12
+    [21] = ACTION_FUNCTION(SMARTALT_WITH_ALT),//modifier LALT is sent with when it is pressed
+    [22] = ACTION_FUNCTION(SMARTALT_MODS_PENDING),//when modifier(such as ctrl or shift) is pressed, just suspend themself untill other key is press.(avoid sending alt when you press them). 
 };
 
 /*
@@ -208,7 +211,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
                 }
             }
             break;
-        case SMARTALT_MODS_LALT:
+        case SMARTALT_WITH_ALT:
             if (record->event.pressed) {
                 add_weak_mods(MOD_BIT(KC_LALT));
                 uint8_t keycode = keymap_key_to_keycode(0, record->event.key);
@@ -217,6 +220,16 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
             } else {
                 uint8_t keycode = keymap_key_to_keycode(0, record->event.key);
                 del_key(keycode);
+                send_keyboard_report();
+            }
+            break;
+        case SMARTALT_MODS_PENDING:
+            if (record->event.pressed) {
+                uint8_t keycode = keymap_key_to_keycode(0, record->event.key);
+                add_weak_mods(MOD_BIT(keycode));
+            } else {
+                uint8_t keycode = keymap_key_to_keycode(0, record->event.key);
+                del_weak_mods(MOD_BIT(keycode));
                 send_keyboard_report();
             }
             break;
