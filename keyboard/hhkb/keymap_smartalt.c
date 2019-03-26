@@ -2,8 +2,15 @@
  * HHKB SapceFn Layout
  */
 #include "keymap_common.h"
-#define SPACEFN_LAYER 3
-#define SMARTALT_LAYER 5
+#define DEFAULT_LAYER 0
+#define SPACEFN_MODE_LAYER 1
+#define SPACEFN_LAYER 2
+#define SMARTALT_LAYER 3
+#define ALTFN_LAYER 4
+#define MEDIA_LAYER 5
+/*
+ * Note that if a key i is pressed on layer j, then even layer j is off, releasing key i still send i on layer j 
+ * */
 enum function_id {
     SMARTALT_ACTIVATION,
     SMARTALT_NAGVIATIONS_FUNCTIONS,
@@ -18,7 +25,7 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] __attribute__ ((section (".key
 const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
 #endif
 
-    /* Layer 0: Default Layer
+    /* Layer 0: Default Layer (SmartAlt Mode)
      * ,-----------------------------------------------------------.
      * |Esc|  1|  2|  3|  4|  5|  6|  7|  8|  9|  0|  -|  =|  \|  `|
      * |-----------------------------------------------------------|
@@ -26,18 +33,18 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
      * |-----------------------------------------------------------|
      * |Contro|  A|  S|  D|  F|  G|  H|  J|  K|  L|  ;|  '|Enter   |
      * |-----------------------------------------------------------|
-     * |Shift   |  Z|  X|  C|  V|  B|  N|  M|  ,|  .|  /|Shift |FN4|
+     * |Shift   |  Z|  X|  C|  V|  B|  N|  M|  ,|  .|  /|Shift |FN5|
      * `-----------------------------------------------------------'
-     *       |Gui|Alt  |         Space         |FN2  |Gui|
+     *       |Gui|SAlt |         Space         |FN4  |ALT|
      *       `-------------------------------------------'
      */
     KEYMAP(ESC, 1,   2,   3,   4,   5,   6,   7,   8,   9,   0,   MINS,EQL, BSLS,GRV,   \
            TAB, Q,   W,   E,   R,   T,   Y,   U,   I,   O,   P,   LBRC,RBRC,BSPC,       \
            LCTL,A,   S,   D,   F,   G,   H,   J,   K,   L,   SCLN,QUOT,ENT,             \
-           LSFT,Z,   X,   C,   V,   B,   N,   M,   COMM,DOT, SLSH,RSFT,FN4,             \
-                LGUI, FN0,          SPC,                FN2,RALT),
+           LSFT,Z,   X,   C,   V,   B,   N,   M,   COMM,DOT, SLSH,RSFT,FN5,             \
+                LGUI, FN3,          SPC,                FN4,RALT),
 
-    /* Layer 1: SpaceFn Layer
+    /* Layer 1: SpaceFn Mode
      * ,-----------------------------------------------------------.
      * |Esc|  1|  2|  3|  4|  5|  6|  7|  8|  9|  0|  -|  =|  \|  `|
      * |-----------------------------------------------------------|
@@ -47,35 +54,16 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
      * |-----------------------------------------------------------|
      * |Shift   |  Z|  X|  C|  V|  B|  N|  M|  ,|  .|  /|Shift |Med|
      * `-----------------------------------------------------------'
-     *       |Gui|Alt  |        SpaceFn        |FN2  |Gui|
+     *       |Gui|Alt  |        SpaceFn        |FN4  |Gui|
      *       `-------------------------------------------'
      */
     KEYMAP(ESC, 1,   2,   3,   4,   5,   6,   7,   8,   9,   0,   MINS,EQL, BSLS,GRV,   \
            TAB, Q,   W,   E,   R,   T,   Y,   U,   I,   O,   P,   LBRC,RBRC,BSPC,       \
            LCTL,A,   S,   D,   F,   G,   H,   J,   K,   L,   SCLN,QUOT,ENT,             \
            LSFT,Z,   X,   C,   V,   B,   N,   M,   COMM,DOT, SLSH,RSFT,FN4,             \
-                LGUI,LALT,          FN3,                FN2,RGUI),
+                LGUI,LALT,          FN2,                FN4,RGUI),
 
-    /* Layer 2: RAltFn Mode 
-     * ,-----------------------------------------------------------.
-     * |   | F1| F2| F3| F4| F5| F6| F7| F8| F9|F10|F11|F12|Ins|Del|
-     * |-----------------------------------------------------------|
-     * |     |   |   |   |   |   |   |   |   |Hom|Up |End|   |     |
-     * |-----------------------------------------------------------|
-     * |      |   |   |   |   |   |   |   |PgU|Lef|Dow|Rig|        |
-     * |-----------------------------------------------------------|
-     * |        |   |   |   |   |   |   |   |PgD|   |   |      |   |
-     * `-----------------------------------------------------------'
-     *       |   |     |                       |     |   |
-     *       `-------------------------------------------'
-     */
-    KEYMAP(TRNS, F1,  F2,  F3,  F4,  F5,  F6,  F7,  F8,  F9,  F10, F11, F12,INS,DEL,   \
-           TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,PSCR,HOME,UP,  END, TRNS,TRNS,      \
-           TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,PGUP,LEFT,DOWN,RGHT,PENT,           \
-           TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,PGDN,TRNS,TRNS,TRNS,TRNS,           \
-                TRNS,LALT,          TRNS,               TRNS,TRNS),
-
-    /* Layer 3: SpaceFn Mode 
+    /* Layer 2: SpaceFn Layer 
      * ,-----------------------------------------------------------.
      * |   | F1| F2| F3| F4| F5| F6| F7| F8| F9|F10|F11|F12|Ins|Del|
      * |-----------------------------------------------------------|
@@ -94,7 +82,45 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
            TRNS,TRNS,TRNS,TRNS,TRNS,SPC, PGDN,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,           \
                 TRNS,TRNS,          TRNS,               TRNS,TRNS),
 
-    /* Layer 4: Media Mode 
+    /* Layer 3: SmartAlt Layer 
+     * ,-----------------------------------------------------------.
+     * |   | F1| F2| F3| F4| F5| F6| F7| F8| F9|F10|F11|F12|Ins|Del|
+     * |-----------------------------------------------------------|
+     * |     |   |   |   |   |   |   |Hom|Up |End|   |   |   |     |
+     * |-----------------------------------------------------------|
+     * |      |   |   |   |   |   |PgU|Lef|Dow|Rig|   |   |        |
+     * |-----------------------------------------------------------|
+     * |        |   |   |   |   |Spc|PgD|   |   |   |   |      |   |
+     * `-----------------------------------------------------------'
+     *       |   |     |                       |     |   |
+     *       `-------------------------------------------'
+     */
+    KEYMAP(FN21,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,  \
+           FN21,FN21,FN21,FN21,FN21,FN21,FN21,FN20,FN20,FN20,FN21,FN21,FN21,FN21,       \
+           FN21,FN21,FN21,FN21,FN21,FN21,FN20,FN20,FN20,FN20,FN21,FN21,FN21,            \
+           FN22,FN21,FN21,FN21,FN21,FN21,FN20,FN21,FN21,FN21,FN21,FN21,FN21,            \
+                FN21,FN21,          FN10,               FN4,FN21),
+
+    /* Layer 4: RAltFn Layer 
+     * ,-----------------------------------------------------------.
+     * |   | F1| F2| F3| F4| F5| F6| F7| F8| F9|F10|F11|F12|Ins|Del|
+     * |-----------------------------------------------------------|
+     * |     |   |   |   |   |   |   |   |   |Hom|Up |End|   |     |
+     * |-----------------------------------------------------------|
+     * |      |   |   |   |   |   |   |   |PgU|Lef|Dow|Rig|        |
+     * |-----------------------------------------------------------|
+     * |        |   |   |   |   |   |   |   |PgD|   |   |      |   |
+     * `-----------------------------------------------------------'
+     *       |   |     |                       |     |   |
+     *       `-------------------------------------------'
+     */
+    KEYMAP(TRNS,F1,  F2,  F3,  F4,  F5,  F6,  F7,  F8,  F9,  F10, F11, F12, INS,DEL,    \
+           TAB, Q,   W,   E,   R,   T,   Y,   U,   I,   HOME,UP,  END, RBRC,BSPC,       \
+           LCTL,A,   S,   D,   F,   G,   H,   J,   PGUP,LEFT,DOWN,RGHT,ENT,             \
+           LSFT,Z,   X,   C,   V,   B,   N,   M,   PGDN,DOT, SLSH,RSFT,APP,             \
+                LGUI, LALT,          SPC,                TRNS,RALT),
+
+    /* Layer 5: Media Layer 
      * ,-----------------------------------------------------------.
      * |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
      * |-----------------------------------------------------------|
@@ -113,24 +139,6 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
            TRNS,VOLD,VOLU,MUTE,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,APP ,TRNS,TRNS,           \
                 TRNS,TRNS,          FN1,               TRNS,TRNS),
 
-    /* Layer 5: SmartAlt Mode 
-     * ,-----------------------------------------------------------.
-     * |   | F1| F2| F3| F4| F5| F6| F7| F8| F9|F10|F11|F12|Ins|Del|
-     * |-----------------------------------------------------------|
-     * |     |   |   |   |   |   |   |Hom|Up |End|   |   |   |     |
-     * |-----------------------------------------------------------|
-     * |      |   |   |   |   |   |PgU|Lef|Dow|Rig|   |   |        |
-     * |-----------------------------------------------------------|
-     * |        |   |   |   |   |Spc|PgD|   |   |   |   |      |   |
-     * `-----------------------------------------------------------'
-     *       |   |     |                       |     |   |
-     *       `-------------------------------------------'
-     */
-    KEYMAP(FN21,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,FN20,   \
-           FN21,FN21,FN21,FN21,FN21,FN21,FN21,FN20,FN20, FN20, FN21,FN21,FN21,FN21,     \
-           FN21,FN21,FN21,FN21,FN21,FN21,FN20,FN20,FN20,FN20,FN21,FN21,FN21,           \
-           FN22,FN21,FN21,FN21,FN21,FN21, FN20,FN21,FN21,FN21,FN21,FN21,FN21,           \
-                FN21,FN21,          FN10,               RALT,FN21),
 };
 
 
@@ -143,12 +151,12 @@ const action_t fn_actions[] __attribute__ ((section (".keymap.fn_actions"))) = {
 #else
 const action_t fn_actions[] PROGMEM = {
 #endif
-    [1]  = ACTION_DEFAULT_LAYER_TOGGLE(1),
-    [2]  = ACTION_LAYER_TAP_TOGGLE(2),//AltFn
-    [3]  = ACTION_LAYER_TAP_KEY(SPACEFN_LAYER, KC_SPC),//SpaceFn
-    [4]  = ACTION_LAYER_MOMENTARY(4),//SpaceFn
+    [1]  = ACTION_DEFAULT_LAYER_TOGGLE(SPACEFN_MODE_LAYER),//Toggle SpaceFn Mode
+    [2]  = ACTION_LAYER_TAP_KEY(SPACEFN_LAYER, KC_SPC),//SpaceFn Key
+    [3]  = ACTION_FUNCTION(SMARTALT_ACTIVATION),
+    [4]  = ACTION_LAYER_TAP_TOGGLE(ALTFN_LAYER),//AltFn
+    [5]  = ACTION_LAYER_MOMENTARY(MEDIA_LAYER),//Media Layer
 
-    [0]  = ACTION_FUNCTION(SMARTALT_ACTIVATION),
     //following keys is available only if SMARTALT layer was activated
     [10]  = ACTION_FUNCTION_TAP(SMARTALT_SPACE),//when tap send space, when holding, cancel SMARTALT_LAYER
     [20] = ACTION_FUNCTION(SMARTALT_NAGVIATIONS_FUNCTIONS),//arrow keys and home/end/pgup/pgdown and F1-F12
