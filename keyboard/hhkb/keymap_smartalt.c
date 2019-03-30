@@ -179,11 +179,11 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
         case SMARTALT_ACTIVATION:
             if (record->event.pressed) {
                 add_weak_mods(MOD_BIT(KC_LALT));
-                layer_on(SMARTALT_LAYER);
+                layer_invert(SMARTALT_LAYER);
             }else
             {
                 send_keyboard_report();// send previous event: D(KC_LALT)
-                layer_off(SMARTALT_LAYER);
+                layer_invert(SMARTALT_LAYER);
                 del_weak_mods(MOD_BIT(KC_LALT));
                 send_keyboard_report();
             }
@@ -205,7 +205,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
             if (record->event.pressed) {
                 if (record->tap.count > 0 && !record->tap.interrupted) {
                     if (record->tap.interrupted) {
-                        layer_off(SMARTALT_LAYER);
+                        layer_invert(SMARTALT_LAYER);
                     }
                 } else {
                     layer_off(SMARTALT_LAYER);
@@ -215,7 +215,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
                     type_code(KC_SPC);
                     record->tap.count = 0;
                 } else {
-                    layer_on(SMARTALT_LAYER);
+                    layer_invert(SMARTALT_LAYER);
                 }
             }
             break;
