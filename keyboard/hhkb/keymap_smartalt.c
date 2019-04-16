@@ -1,5 +1,6 @@
 /*
- * HHKB SapceFn Layout
+ * HHKB SmartAlt Layout (with RAlt as Fn)
+ * Alt+Space will behavior as Alt
  */
 #include "keymap_common.h"
 #define        DEFAULT_LAYER   0
@@ -253,7 +254,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
                 send_keyboard_report();
             }
             break;
-        /*case SMART_ALT_SPACE:
+        case SMART_ALT_SPACE:
             if (record->event.pressed) {
                 if (record->tap.count > 0 && !record->tap.interrupted) {
                     if (record->tap.interrupted) {
@@ -270,7 +271,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
                     layer_invert(SMARTALT_LAYER);
                 }
             }
-            break;*/
+            break;
         case SMART_ALT_ESC:
             if (record->event.pressed) {
                 del_weak_mods(MOD_BIT(KC_LALT));

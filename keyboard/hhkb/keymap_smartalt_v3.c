@@ -1,5 +1,5 @@
 /*
- * HHKB SmartAlt Layout (with RAlt as Fn)
+ * HHKB SmartALt Layout (without RAlt as Fn)
  * Alt+Space will activate layer where Alt+F1,...,F12 and Alt+1,...,9,0
  * And Alt+; will behave as ALt
  */
@@ -42,14 +42,14 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
      * |-----------------------------------------------------------|
      * |Shift   |  Z|  X|  C|  V|  B|  N|  M|  ,|  .|  /|Shift |FN5|
      * `-----------------------------------------------------------'
-     *       |Gui|SAlt |         Space         |FN4  |ALT|
+     *       |Gui|SAlt |         Space         |RALT |GUI|
      *       `-------------------------------------------'
      */
     KEYMAP(ESC, 1,   2,   3,   4,   5,   6,   7,   8,   9,   0,   MINS,EQL, BSLS,GRV,   \
            TAB, Q,   W,   E,   R,   T,   Y,   U,   I,   O,   P,   LBRC,RBRC,BSPC,       \
            LCTL,A,   S,   D,   F,   G,   H,   J,   K,   L,   SCLN,QUOT,ENT,             \
            LSFT,Z,   X,   C,   V,   B,   N,   M,   COMM,DOT, SLSH,RSFT,FN6,             \
-                LGUI, FN3,          SPC,                FN4,RALT),
+                LGUI, FN3,          SPC,                RALT,RGUI),
 
     /* Layer 1: SpaceFn Mode
      * ,-----------------------------------------------------------.
@@ -150,27 +150,26 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
     KEYMAP(TRNS,F1,  F2,  F3,  F4,  F5,  F6,  F7,  F8,  F9,  F10, F11, F12, INS,DEL,    \
            TAB, Q,   W,   E,   R,   T,   Y,   U,   I,   HOME,UP,  END, RBRC,BSPC,       \
            LCTL,A,   S,   D,   F,   G,   H,   J,   PGUP,LEFT,DOWN,RGHT,ENT,             \
-           LSFT,Z,   X,   C,   V,   B,   N,   M,   PGDN,DOT, SLSH,RSFT,RCTL,             \
+           LSFT,Z,   X,   C,   V,   B,   N,   M,   PGDN,DOT, SLSH,RSFT,RCTL,            \
                 LGUI, LALT,          SPC,                TRNS,RALT),
 
-    /* Layer 6: Media Layer  (Actived be FN)
+    /* Layer 6: HHKB mode (HHKB Fn)
      * ,-----------------------------------------------------------.
-     * |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+     * |Pwr| F1| F2| F3| F4| F5| F6| F7| F8| F9|F10|F11|F12|Ins|Del|
      * |-----------------------------------------------------------|
-     * |     |PSC|SLC|PAU|   |   |   |   |   |   |   |   |   |     |
+     * |Caps |   |   |   |   |   |   |   |Psc|Slk|Pus|Up |   |Backs|
      * |-----------------------------------------------------------|
-     * |      |MPR|MPL|MNX|   |   |   |   |   |   |   |   |        |
+     * |      |VoD|VoU|Mut|   |   |  *|  /|Hom|PgU|Lef|Rig|Enter   |
      * |-----------------------------------------------------------|
-     * |        |VoD|VoU|Mut|   |   |   |   |   |   |APP|      |   |
+     * |        |   |   |   |   |   |  +|  -|End|PgD|Dow|      |   |
      * `-----------------------------------------------------------'
-     *       |   |     |       SPCFN_EN        |     |   |
+     *       |   |     |       SpaceFn_EN      |     |   |
      *       `-------------------------------------------'
      */
-
-    KEYMAP(TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS, \
-           TRNS,PSCR,SLCK,PAUS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,      \
-           TRNS,MPRV,MPLY,MNXT,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,           \
-           TRNS,VOLD,VOLU,MUTE,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,APP ,TRNS,TRNS,           \
+    KEYMAP(PWR, F1,  F2,  F3,  F4,  F5,  F6,  F7,  F8,  F9,  F10, F11, F12, INS, DEL,   \
+           CAPS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,PSCR,SLCK,PAUS, UP, TRNS, BSPC,      \
+           TRNS,VOLD,VOLU,MUTE,TRNS,TRNS,PAST,PSLS,HOME,PGUP,LEFT,RGHT,PENT,            \
+           TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,PPLS,PMNS,END, PGDN,DOWN,TRNS,TRNS,            \
                 TRNS,TRNS,          FN1,               TRNS,TRNS),
 
     /* Layer 7: Function Layer (Locked by LAlt + Esc)
